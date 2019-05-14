@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Users{% endblock %}</h1>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="filehandler">
+    <form method="POST" action="{{ url_for('perf_user.user') }}" enctype="multipart/form-data">
+        <div class="filehandler-content">
+            <div class="filehandler-label">
+                Mötesbokare 1
+            </div>
+
+            <select name="user_1">
+                <option value="0">Välj mötesbokare</option>
+
+                
+                {% for booker in bookers %}
+                    <option value="{{ booker }}" {% if booker == users[0] %} selected {% endif %}>
+                        {{ booker }}
+                    </option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <div class="filehandler-content">
+            <div class="filehandler-label">
+                Mötesbokare 2
+            </div>
+
+            <select name="user_2">
+                <option value="0">Välj mötesbokare</option>
+
+                {% for booker in bookers %}
+                    <option value="{{ booker }}" {% if booker == users[1] %} selected {% endif %}>
+                        {{ booker }}
+                    </option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <input type="submit" name="submit" value="Se performance" class="filehandler-button">
+
+    </form>
+  </div>
+
+  {% if filemeta %}
+    <div class="current-file">
+      <ul class="inline-list">
+        <li>
+          <b>ID:</b>
+          {{ filemeta['id'] }}
+        </li>
+        <li>
+          <b>Uppladdad:</b>
+          {{ filemeta['upload_date'] }}
+        </li>
+        <li>
+          <b>Uppladdad av:</b>
+          {{ get_user_name(filemeta['uploaded_by']) }}
+        </li>
+        <li>
+          <a href="{{ filemeta['filepath'] }}">Ladda ned</a>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+
+    <div class="row">
+        {% for row in data %}
+            <div class="col col-half">
+                {% if row['histogram'] %}
+                    <img src="data:image/jpeg;base64,{{ row['histogram'] }}">
+                {% endif %}
+
+                {% if row['diagram'] %}
+                    <img src="data:image/jpeg;base64,{{ row['diagram'] }}">
+                {% endif %}
+
+                {{ row['table'] | safe }}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

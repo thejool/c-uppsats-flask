@@ -145,6 +145,19 @@ def get_file_by_id (id):
     return file
 
 
+# Get all bookers by file id
+def get_bookers (id):
+    import pandas as pd
+    file_meta = get_file_meta_by_id(id)
+
+    try:
+        file = pd.read_csv(file_meta['filepath'])
+    except:
+        file = None
+
+    return file.User_ID.unique()
+
+
 def format_import (file, df):
     import pandas as pd
     import numpy as np

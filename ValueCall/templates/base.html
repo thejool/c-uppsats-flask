@@ -19,8 +19,23 @@
     </nav>
   </div>
 </header>
+
 <section class="content">
   <div class="container">
+    <nav>
+        <ul class="inline-list">
+          <li>
+            <a href="#">Performance totalt</a>
+          </li>
+          <li>
+            <a href="{{ url_for('perf_user.user') }}">Performance mötesbokare</a>
+          </li>
+          <li>
+            <a href="{{ url_for('data_users.data') }}">Hantera data</a>
+          </li>
+        </ul>
+    </nav>
+
     {% for message in get_flashed_messages() %}
       <div class="flash">{{ message }}</div>
     {% endfor %}

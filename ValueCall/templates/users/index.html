@@ -8,7 +8,7 @@
 
 {% block content %}
   <div class="filehandler">
-    <form method="POST" action="/change" enctype="multipart/form-data">
+    <form method="POST" action="/change" enctype="multipart/form-data" class="filehandler-content">
       <div class="filehandler-label">
         Välj fil att hantera
       </div>
@@ -26,7 +26,7 @@
       <input type="submit" name="submit" value="Välj fil">
     </form>
 
-    <form method="POST" action="/upload" enctype="multipart/form-data">
+    <form method="POST" action="/upload" enctype="multipart/form-data" class="filehandler-content">
       <div class="filehandler-label">
         Ladda upp ny fil
       </div>

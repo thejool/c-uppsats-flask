@@ -41,4 +41,8 @@ def create_app(test_config=None):
     from . import file_handler
     app.register_blueprint(file_handler.bp)
 
+
+    from . import perf_user
+    app.register_blueprint(perf_user.bp)
+
     return app
