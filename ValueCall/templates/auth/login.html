@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="/login" class="form-login">
+    <h1>Logga in</h1>
+
+    <div class="form-input">
+      <label for="username">Användarnamn</label>
+      <input name="username" id="username" required placeholder="T ex: andreas@valuecall.se">
+    </div>
+
+    <div class="form-input">
+      <label for="password">Lösenord</label>
+      <input type="password" name="password" id="password" required placeholder="*******">
+    </div>
+    <div class="form-input">
+      <button type="submit" class="btn btn-primary">Logga in</button>
+    </div>
+  </form>
+{% endblock %}

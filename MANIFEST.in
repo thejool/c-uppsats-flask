@@ -1,0 +1,4 @@
+include ValueCall/schema.sql
+graft ValueCall/static
+graft ValueCall/templates
+global-exclude *.pyc

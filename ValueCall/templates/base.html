@@ -1,0 +1,30 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - ValueCall</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<header class="header">
+  <div class="container">
+    <img src="{{ url_for('static', filename='img/logo_valuecall.png') }}" class="header-logo">
+
+    <nav  class="header-nav">
+      <ul class="inline-list">
+        {% if g.user %}
+          <li><span>{{ g.user['username'] }} </span>
+          <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+        {% else %}
+          <li><a href="{{ url_for('auth.register') }}">Register</a>
+          <li><a href="{{ url_for('auth.login') }}">Log In</a>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>
+<section class="content">
+  <div class="container">
+    {% for message in get_flashed_messages() %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+  </div>
+</section>
