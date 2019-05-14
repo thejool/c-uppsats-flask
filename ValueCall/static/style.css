@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+}
+
+h1 {
+  margin-top: 4px;
+}
+
+.header {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 20px;
+  padding: 20px 0;
+}
+
+.header-logo {
+  float: left;
+  width: 200px;
+}
+
+.header-nav {
+  float: right;
+}
+
+.inline-list {
+  margin: 0;
+  padding-left: 0;
+}
+
+.inline-list li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.inline-list li:last-child {
+  margin-right: 0;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.form-login {
+  max-width: 480px;
+  margin: 100px auto;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.form-input {
+  display: block;
+}
+
+
+.form-input label {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.form-input input {
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 1px solid #e3e3e3;
+  height: 24px;
+  width: 100%;
+  padding: 5px 7px;
+}
+
+.btn {
+  display: block;
+  border-radius: 3px;
+  border: 0;
+  font-size: 14px;
+  padding: 7px 15px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #419cc4;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #378cb1;
+}
+
+
+.filehandler {
+  overflow: hidden;
+  background: #429dc4;
+  padding: 40px 20px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.filehandler form {
+  width: 50%;
+  float: left;
+  text-align: center;
+}
+
+.filehandler-label {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.filehandler form:first-child {
+  border-right: 1px solid #fff;
+}
+
+.filehandler form:last-child {
+  border-left: 1px solid #fff;
+}
+
+.current-file {
+  background: #eee;
+  padding: 15px;
+}
+
+.dataframe {
+  font-size: 14px;
+  width: 100%;
+}
+
+.dataframe th,
+.dataframe td {
+  padding: 2px;
+}
+
+.dataframe tr th,
+.dataframe tr:nth-child(2n) td {
+  background: #eee;
+}

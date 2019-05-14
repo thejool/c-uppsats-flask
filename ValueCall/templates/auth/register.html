@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="form-login">
+    <h1>Registrera</h1>
+
+    <div class="form-input">
+      <label for="username">Användarnamn</label>
+      <input name="username" id="username" required placeholder="T ex: andreas@valuecall.se">
+    </div>
+
+    <div class="form-input">
+      <label for="password">Lösenord</label>
+      <input type="password" name="password" id="password" required placeholder="*******">
+    </div>
+    <div class="form-input">
+      <button type="submit" class="btn btn-primary">Registrera dig</button>
+    </div>
+  </form>
+{% endblock %}
