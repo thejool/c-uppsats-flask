@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post" action="/login" class="form-login">
+  <form method="post" action="{{ url_for('auth.login') }}" class="form-login">
     <h1>Logga in</h1>
 
     <div class="form-input">

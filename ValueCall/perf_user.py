@@ -18,6 +18,7 @@ bp = Blueprint('perf_user', __name__, url_prefix='/performance')
 
 
 @bp.route('/user', methods=['GET', 'POST'])
+@login_required
 def user():
     filemeta = get_file_meta_by_id(g.user['current_file'])
     bookers = get_bookers(g.user['current_file'])
@@ -32,21 +33,22 @@ def user():
             users.append(user_1)
 
             user_1 = get_age_perf_by_user(user_1)
-            table = user_1['table'].head(100).to_html().replace('border="1"','border="0"')
+            table = [user_1['table'].head(100).to_html().replace('border="1"','border="0"')]
+
             histogram = user_1['histogram']
             diagram = user_1['diagram']
 
-            data.append(dict([('table', table), ('histogram', histogram), ('diagram', diagram)]))
+            data.append(dict([('tables', table), ('histogram', histogram), ('diagram', diagram)]))
 
         if user_2 != 0:
             users.append(user_2)
 
             user_2 = get_age_perf_by_user(user_2)
-            table = user_2['table'].head(100).to_html().replace('border="1"','border="0"')
+            table = [user_2['table'].head(100).to_html().replace('border="1"','border="0"')]
             histogram = user_2['histogram']
             diagram = user_2['diagram']
 
-            data.append(dict([('table', table), ('histogram', histogram), ('diagram', diagram)]))
+            data.append(dict([('tables', table), ('histogram', histogram), ('diagram', diagram)]))
 
         
         if len(data) == 0:
@@ -88,6 +90,9 @@ def get_age_perf_by_user(user):
     # Calculate hit rate per age
     user_perf['Hit_Rate'] = user_perf['Ja'] / (user_perf['Nej'] + user_perf['Ja'])
 
+    # Reset user_perf index
+    user_perf = user_perf.reset_index(drop=True)
+
     # Plot histogram
     fig_histogram, ax = plt.subplots()
     
@@ -101,7 +106,8 @@ def get_age_perf_by_user(user):
 
 
     # Sort by hit rate
-    user_perf = user_perf.sort_values(by=['Hit_Rate'], ascending=False)
+    #user_perf = user_perf.sort_values(by=['Hit_Rate'], ascending=False)
+    
     result = dict([('table', user_perf), ('histogram', fig_histogram), ('diagram', fig_diagram)])
     return result
 

@@ -10,10 +10,10 @@
       <ul class="inline-list">
         {% if g.user %}
           <li><span>{{ g.user['username'] }} </span>
-          <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+          <li><a href="{{ url_for('auth.logout') }}">Logga ut</a>
         {% else %}
-          <li><a href="{{ url_for('auth.register') }}">Register</a>
-          <li><a href="{{ url_for('auth.login') }}">Log In</a>
+          <li><a href="{{ url_for('auth.register') }}">Registrera</a>
+          <li><a href="{{ url_for('auth.login') }}">Logga in</a>
         {% endif %}
       </ul>
     </nav>
@@ -21,20 +21,25 @@
 </header>
 
 <section class="content">
-  <div class="container">
-    <nav>
+  {% if g.user %}
+    <nav class="subnav">
+      <div class="container">
         <ul class="inline-list">
-          <li>
-            <a href="#">Performance totalt</a>
-          </li>
-          <li>
-            <a href="{{ url_for('perf_user.user') }}">Performance mötesbokare</a>
-          </li>
-          <li>
-            <a href="{{ url_for('data_users.data') }}">Hantera data</a>
-          </li>
+            <li>
+              <a href="{{ url_for('perf_global.performance') }}">Performance totalt</a>
+            </li>
+            <li>
+              <a href="{{ url_for('perf_user.user') }}">Performance mötesbokare</a>
+            </li>
+            <li>
+              <a href="{{ url_for('file_handler.files') }}">Hantera data</a>
+            </li>
         </ul>
-    </nav>
+      </div>
+    {% endif %}
+  </nav>
+    
+  <div class="container">
 
     {% for message in get_flashed_messages() %}
       <div class="flash">{{ message }}</div>
@@ -43,3 +48,7 @@
     {% block content %}{% endblock %}
   </div>
 </section>
+
+<footer class="footer">
+  C-uppsats av Joel Gustafsson & Alexander Lindahl VT19
+</footer>

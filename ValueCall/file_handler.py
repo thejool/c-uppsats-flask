@@ -1,5 +1,6 @@
 import os
 import datetime
+import pandas as pd
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
@@ -13,14 +14,15 @@ from pprint import pprint
 from ValueCall.auth import (login_required, load_logged_in_user, get_user_name)
 from ValueCall.db import get_db
 
-bp = Blueprint('data_users', __name__)
+bp = Blueprint('file_handler', __name__, url_prefix='/files')
 
 ALLOWED_EXTENSIONS = set(['xlsx', 'csv'])
 UPLOAD_FOLDER = os.path.abspath('.') + '/ValueCall/uploads/'
 
 
-@bp.route('/data')
-def data():
+@bp.route('/')
+@login_required
+def files():
     db = get_db()
     uploads = db.execute(
         'SELECT * FROM uploads'
@@ -35,7 +37,8 @@ def data():
         return render_template('users/index.html', uploads=uploads, tables=[data.head(100).to_html().replace('border="1"','border="0"')], filemeta=filemeta)
 
 
-@bp.route('/change', methods=['GET', 'POST'])
+@bp.route('/change', methods=['POST'])
+@login_required
 def change():
     if request.method == 'POST':
         db = get_db()
@@ -47,10 +50,35 @@ def change():
             )
             db.commit()
 
-    return redirect(url_for('data_users.data'))
+    return redirect(url_for('file_handler.files'))
+
+
+@bp.route('/remove/<int:file_id>')
+@login_required
+def remove(file_id):
+    if file_id != None:
+        db = get_db()
+        filemeta = get_file_meta_by_id(file_id)
+
+        os.remove(filemeta['filepath'])
+
+        if g.user != None:
+            db.execute(
+                'UPDATE user SET current_file = (?) WHERE id = (?)', (0, str(g.user['id']))
+            )
+
+        db.execute(
+            'DELETE FROM uploads WHERE id = (?)', (file_id,)
+        )
+        db.commit()
+    else:
+        flash("Välj fil att radera")
+
+    return redirect(url_for('file_handler.files'))
 
 
 @bp.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
     if request.method == 'POST':
 
@@ -67,9 +95,6 @@ def upload():
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-
-            import pandas as pd
             import xlrd
             import tempfile
 
@@ -82,15 +107,12 @@ def upload():
             elif('csv' in file.filename):
                 df = format_import(file, pd.read_csv(tempfile_path))
 
-            return redirect(url_for('data_users.data'))
+            return redirect(url_for('file_handler.files'))
 
-            #file.save(os.path.join(UPLOAD_FOLDER, filename))
-            #return redirect(url_for('uploaded_file',
-            #                        filename=filename))
         else:
             flash('Wrong file format')
 
-    return redirect(url_for('data_users.data'))
+    return redirect(url_for('file_handler.files'))
 
 
 
@@ -133,12 +155,11 @@ def get_file_meta_by_id (id):
 
 # Get file content by id
 def get_file_by_id (id):
-    import pandas as pd
     error = None
     file_meta = get_file_meta_by_id(id)
 
     try:
-        file = pd.read_csv(file_meta['filepath'])
+        file = pd.read_csv(file_meta['filepath'], index_col=0)
     except:
         file = None
 
@@ -147,11 +168,10 @@ def get_file_by_id (id):
 
 # Get all bookers by file id
 def get_bookers (id):
-    import pandas as pd
     file_meta = get_file_meta_by_id(id)
 
     try:
-        file = pd.read_csv(file_meta['filepath'])
+        file = pd.read_csv(file_meta['filepath'], index_col=0)
     except:
         file = None
 
@@ -159,7 +179,6 @@ def get_bookers (id):
 
 
 def format_import (file, df):
-    import pandas as pd
     import numpy as np
     import urllib.request
     import json
@@ -195,15 +214,15 @@ def format_import (file, df):
     # Rename columns
     df.rename(columns={'Anvandare_ID':'User_ID', 'Postadress_ort':'Ort', 'Postadress_postnr':'Postnr'}, inplace=True)
 
+    # Reset df index
+    df = df.reset_index(drop=True)
+
     # Current timestamp
     time = datetime.datetime.now()
     timestamp_csv = str(time.strftime("%Y-%m-%d_%H%-M%-S")) + ".csv"
 
     # Save the file to the defined location
     filepath = os.path.join(UPLOAD_FOLDER, timestamp_csv)
-    file.save(filepath)
-
-    # ANVÄNDS INTE?
     df.to_csv(filepath)
 
     db = get_db()

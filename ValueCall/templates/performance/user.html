@@ -72,19 +72,21 @@
   {% endif %}
 
     <div class="row">
-        {% for row in data %}
-            <div class="col col-half">
-                {% if row['histogram'] %}
-                    <img src="data:image/jpeg;base64,{{ row['histogram'] }}">
-                {% endif %}
+      {% for row in data %}
+        <div class="col {% if data|length > 1 %} col-half {% endif %}">
+          {% if row['histogram'] %}
+            <img src="data:image/jpeg;base64,{{ row['histogram'] }}">
+          {% endif %}
 
-                {% if row['diagram'] %}
-                    <img src="data:image/jpeg;base64,{{ row['diagram'] }}">
-                {% endif %}
+          {% if row['diagram'] %}
+            <img src="data:image/jpeg;base64,{{ row['diagram'] }}">
+          {% endif %}
 
-                {{ row['table'] | safe }}
-            </div>
-        {% endfor %}
+          {% for table in row['tables'] %}
+            {{ table | safe }}
+          {% endfor %}
+        </div>
+      {% endfor %}
     </div>
 
 {% endblock %}

@@ -2,7 +2,6 @@ import os
 from flask import Flask
 from flask_bootstrap import Bootstrap
 
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -26,21 +25,24 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-
     from . import db
     db.init_app(app)
 
+    from . import index
+    app.register_blueprint(index.bp)
+    app.add_url_rule('/', endpoint='index')
+
     from . import auth
     app.register_blueprint(auth.bp)
-    app.add_url_rule('/', endpoint='index')
 
     # Global function for template files
     app.jinja_env.globals.update(get_user_name=auth.get_user_name)
 
-
     from . import file_handler
     app.register_blueprint(file_handler.bp)
 
+    from . import perf_global
+    app.register_blueprint(perf_global.bp)
 
     from . import perf_user
     app.register_blueprint(perf_user.bp)

@@ -8,7 +8,7 @@
 
 {% block content %}
   <div class="filehandler">
-    <form method="POST" action="/change" enctype="multipart/form-data" class="filehandler-content">
+    <form method="POST" action="{{ url_for('file_handler.change') }}" enctype="multipart/form-data" class="filehandler-content">
       <div class="filehandler-label">
         Välj fil att hantera
       </div>
@@ -26,7 +26,7 @@
       <input type="submit" name="submit" value="Välj fil">
     </form>
 
-    <form method="POST" action="/upload" enctype="multipart/form-data" class="filehandler-content">
+    <form method="POST" action="{{ url_for('file_handler.upload') }}" enctype="multipart/form-data" class="filehandler-content">
       <div class="filehandler-label">
         Ladda upp ny fil
       </div>
@@ -53,6 +53,9 @@
         </li>
         <li>
           <a href="{{ filemeta['filepath'] }}">Ladda ned</a>
+        </li>
+        <li style="float:right;">
+          <a href="{{ url_for('file_handler.remove', file_id=g.user['current_file']) }}">Ta bort</a>
         </li>
       </ul>
     </div>

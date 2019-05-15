@@ -8,15 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from ValueCall.db import get_db
 
-bp = Blueprint('auth', __name__)
-
-
-@bp.route('/')
-def index():
-    if g.user != None:
-        return render_template('users/index.html')
-    else:
-        return render_template('auth/login.html')
+bp = Blueprint('auth', __name__, url_prefix="/auth")
 
 
 @bp.route('/register', methods=('GET', 'POST'))
