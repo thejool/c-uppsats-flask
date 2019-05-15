@@ -20,53 +20,58 @@ bp = Blueprint('perf_user', __name__, url_prefix='/performance')
 @bp.route('/user', methods=['GET', 'POST'])
 @login_required
 def user():
-    filemeta = get_file_meta_by_id(g.user['current_file'])
-    bookers = get_bookers(g.user['current_file'])
-    users = []
+    if g.user['current_file'] == 0:
+        flash("Du måste välja en fil först")
+        return redirect(url_for('file_handler.files'))
 
-    if request.method == 'POST':
-        data = []
-        user_1 = int(request.form.get('user_1'))
-        user_2 = int(request.form.get('user_2'))
+    else:
+        filemeta = get_file_meta_by_id(g.user['current_file'])
+        bookers = get_bookers(g.user['current_file'])
+        users = []
 
-        if user_1 != 0:
-            users.append(user_1)
+        if request.method == 'POST':
+            data = []
+            user_1 = int(request.form.get('user_1'))
+            user_2 = int(request.form.get('user_2'))
 
-            user_1 = get_age_perf_by_user(user_1)
-            table = [user_1['table'].head(100).to_html().replace('border="1"','border="0"')]
+            if user_1 != 0:
+                users.append(user_1)
 
-            histogram = user_1['histogram']
-            diagram = user_1['diagram']
+                user_1 = get_age_perf_by_user(user_1)
+                table = [user_1['table'].head(100).to_html().replace('border="1"','border="0"')]
 
-            data.append(dict([('tables', table), ('histogram', histogram), ('diagram', diagram)]))
+                histogram = user_1['histogram']
+                diagram = user_1['diagram']
 
-        if user_2 != 0:
-            users.append(user_2)
+                data.append(dict([('tables', table), ('histogram', histogram), ('diagram', diagram)]))
 
-            user_2 = get_age_perf_by_user(user_2)
-            table = [user_2['table'].head(100).to_html().replace('border="1"','border="0"')]
-            histogram = user_2['histogram']
-            diagram = user_2['diagram']
+            if user_2 != 0:
+                users.append(user_2)
 
-            data.append(dict([('tables', table), ('histogram', histogram), ('diagram', diagram)]))
+                user_2 = get_age_perf_by_user(user_2)
+                table = [user_2['table'].head(100).to_html().replace('border="1"','border="0"')]
+                histogram = user_2['histogram']
+                diagram = user_2['diagram']
 
-        
-        if len(data) == 0:
-            return render_template('performance/user.html', 
-                filemeta=filemeta,
-                users=users,
-                bookers=bookers)
+                data.append(dict([('tables', table), ('histogram', histogram), ('diagram', diagram)]))
+
+            
+            if len(data) == 0:
+                return render_template('performance/user.html', 
+                    filemeta=filemeta,
+                    users=users,
+                    bookers=bookers)
+            else:
+                return render_template('performance/user.html', 
+                    data=data,
+                    filemeta=filemeta,
+                    users=users,
+                    bookers=bookers)
         else:
             return render_template('performance/user.html', 
-                data=data,
                 filemeta=filemeta,
                 users=users,
                 bookers=bookers)
-    else:
-        return render_template('performance/user.html', 
-            filemeta=filemeta,
-            users=users,
-            bookers=bookers)
 
 
 def get_age_perf_by_user(user):

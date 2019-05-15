@@ -20,6 +20,10 @@ bp = Blueprint('perf_global', __name__, url_prefix='/performance')
 def performance():
     filemeta = get_file_meta_by_id(g.user['current_file'])
 
+    if filemeta == None:
+        flash("Du måste välja en fil först")
+        return redirect(url_for('file_handler.files'))
+
     age_data = get_age_perf()
     age = age_data['table'].head(100).to_html().replace('border="1"','border="0"')
     
